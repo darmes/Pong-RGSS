@@ -63,7 +63,7 @@ class Scene_Title_Pong
       when 1  # Local Two Player
         command_two_player
       when 2  # LAN Two Player
-        print "Not working"
+        command_two_player_LAN
       when 3  # Shutdown
         command_shutdown
       end
@@ -90,6 +90,17 @@ class Scene_Title_Pong
     Graphics.frame_count = 0
     # Switch to game screen
     $scene = Scene_Pong_Two.new
+  end
+	#--------------------------------------------------------------------------
+  # * Command: Two Player LAN
+  #--------------------------------------------------------------------------
+  def command_two_player_LAN
+    # Play decision SE
+    $game_system.se_play($data_system.decision_se)
+    # Reset frame count for measuring play time
+    Graphics.frame_count = 0
+    # Switch to game screen
+    $scene = Scene_Connect.new
   end
   #--------------------------------------------------------------------------
   # * Command: Shutdown

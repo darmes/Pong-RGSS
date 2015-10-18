@@ -1,4 +1,4 @@
-require "socket"
+# require "socket"
 # GameClient needs to get player 1 paddle position and ball position
 # GameClient needs to send player 2 paddle position
 # Get message format: 000,000;000,000; # paddle_x,paddle_y;ball_x,ball_y
@@ -19,8 +19,8 @@ class GameServer
 	
 	# default port = 1990
 	# default hostname = localhost
-	def initialize(port = DEFAULT_PORT)
-		@server = TCPServer.new(port)
+	def initialize(hostname = DEFAULT_HOSTNAME, port = DEFAULT_PORT)
+		@server = TCPServer.new(hostname, port)
 		@socket = nil
 		@request = ""
 		# Initialize reply to nil
@@ -29,10 +29,16 @@ class GameServer
 		@game_state = Array.new(6, 0) 
 	end
 	
-	def accept_connection
-		Thread.new do
+	def accept
+		#Thread.new do
+			@server.listen(1)
 			@socket = @server.accept
-		end		
+			Console.log "Connected to #{@socket}"
+		#end		
+	end
+	
+	def close
+		@server.close
 	end
 	
 	def update
@@ -87,8 +93,8 @@ class GameServer
 		paddle2_y =  game_state_hash[:paddle2_y]
 		ball_x    =  game_state_hash[:ball_x]
 		ball_y    =  game_state_hash[:ball_y]
-		score1    =  game_state_hash[:score1]
-		score2    =  game_state_hash[:score2]
+		score1    =  game_state_hash[:@score_left]
+		score2    =  game_state_hash[:@score_right]
 	end
 	
 	def paddle1_y=(y)

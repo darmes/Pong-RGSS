@@ -9,22 +9,21 @@ class Scene_Connect
   # * Main Processing
   #--------------------------------------------------------------------------
   def main
-    $data_system        = load_data("Data/System.rxdata")
-    # Make system object
-    $game_system = Game_System.new
-    # Make title graphic
-    @sprite = Sprite.new
-    @sprite.bitmap = RPG::Cache.title($data_system.title_name)
+		# Initialize connection thread
+		@connection_thread = nil
+		
     # Make command window
-    s1 = "One Player"
-    s2 = "Local Two Player"
-    s3 = "LAN Two Player"
-    s4 = "Shutdown"
-    @command_window = Window_Command.new(192, [s1, s2, s3, s4])
+    s1 = "Host"
+    s2 = "Client"
+    s3 = "Back"
+    @command_window = Window_Command.new(192, [s1, s2, s3])
     @command_window.back_opacity = 160
     @command_window.x = 320 - @command_window.width / 2
     @command_window.y = 288
-
+		# Make help window
+		@help_window = Window_Help.new
+		@help_window.set_text("Are you host or client?", 1)
+		
     # Execute transition
     Graphics.transition
     # Main loop
@@ -42,61 +41,105 @@ class Scene_Connect
     end
     # Prepare for transition
     Graphics.freeze
-    # Dispose of command window
+    # Dispose of windows
     @command_window.dispose
-    # Dispose of title graphic
-    @sprite.bitmap.dispose
-    @sprite.dispose
+		@help_window.dispose
   end
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
-    # Update command window
+		# Update help window
+		@help_window.update
+		# Update command window
     @command_window.update
+    # Check if connecting, if so then wait
+		if connecting?
+			Console.log "other thread is running..."
+			if Input.trigger?(Input::B)				
+				@connection_thread.kill
+				$game_server.close
+				@connection_thread = nil
+			end
+			return
+		end				
     # If C button was pressed
     if Input.trigger?(Input::C)
       # Branch by command window cursor position
       case @command_window.index
-      when 0  # One Player
-        command_one_player
-      when 1  # Local Two Player
-        command_two_player
-      when 2  # LAN Two Player
-        print "Not working"
-      when 3  # Shutdown
-        command_shutdown
+      when 0  # Host
+        command_host
+      when 1  # Client
+        command_client
+      when 2  # Back
+        command_back
       end
     end
+		if Input.trigger?(Input::B)
+			command_back
+		end
   end
   #--------------------------------------------------------------------------
-  # * Command: One Player
+  # * Command: Host
   #--------------------------------------------------------------------------
-  def command_one_player
+  def command_host
     # Play decision SE
     $game_system.se_play($data_system.decision_se)
-    # Reset frame count for measuring play time
-    Graphics.frame_count = 0
+		# Connect to client
+		establish_connection_with_client
+    
     # Switch to game screen
-    $scene = Scene_Pong_One.new
-    end
+    # $scene = Scene_Pong_Two.new(true, true)
+	end
   #--------------------------------------------------------------------------
-  # * Command: Two Player
+  # * Command: Client
   #--------------------------------------------------------------------------
-  def command_two_player
+  def command_client
     # Play decision SE
     $game_system.se_play($data_system.decision_se)
-    # Reset frame count for measuring play time
-    Graphics.frame_count = 0
+    # Create Client
+		$game_client = GameClient.new
     # Switch to game screen
-    $scene = Scene_Pong_Two.new
+    $scene = Scene_Pong_Two.new(true, false)
   end
   #--------------------------------------------------------------------------
-  # * Command: Shutdown
+  # * Command: Back
   #--------------------------------------------------------------------------
-  def command_shutdown
-    # Shutdown
-    $scene = nil
+  def command_back
+    # Play decision SE
+    $game_system.se_play($data_system.decision_se)
+    # Switch to game screen
+    $scene = Scene_Title_Pong.new
   end
-
+	#--------------------------------------------------------------------------
+	# * Establish Connection with Client
+	#--------------------------------------------------------------------------
+	def establish_connection_with_client
+		# Update help message
+		@help_window.set_text("Waiting for client to connect...", 1)
+		Console.log "creating server"
+		# Create Server
+		$game_server = GameServer.new
+		@connection_thread = Thread.new do
+			Console.log "waiting for client..."
+			sleep(1)
+			$game_server.accept
+			# @connection_thread = nil
+			$scene = Scene_Pong_Two.new(true, true)
+		end
+		Thread.current.priority = 10
+		Console.log "Thread is running, returning to normal update cycle"
+	end
+	#--------------------------------------------------------------------------
+	# * Establish Connection with Server
+	#--------------------------------------------------------------------------
+	def establish_connection_with_server
+	
+	end
+	#--------------------------------------------------------------------------
+	# * Connecting? - return whether the process is trying to connect
+	#--------------------------------------------------------------------------
+	def connecting?
+		return @connection_thread
+	end
 end

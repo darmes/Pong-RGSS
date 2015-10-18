@@ -8,9 +8,19 @@ class Scene_Pong_Two
 	#--------------------------------------------------------------------------
 	# * Object Initialization
 	#--------------------------------------------------------------------------
-	def initialize(lan = false)
+	def initialize(lan = false, host = false)
 		@lan = lan
-	end
+		@host = host
+		if @lan and @host
+			Console.log "Starting server..."
+			@server = GameServer.new
+			Console.log "Waiting for connection..."
+			@server.accept
+			Console.log "Connected"
+		elsif @lan
+			@client = GameClient.new
+		end
+	end	
   #--------------------------------------------------------------------------
   # * Main Processing
   #--------------------------------------------------------------------------

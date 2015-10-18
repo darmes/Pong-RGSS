@@ -1,4 +1,4 @@
-require "socket"
+# require "socket"
 # GameClient needs to get player 1 paddle position and ball position
 # GameClient needs to send player 2 paddle position
 # Get message format: 000,000;000,000; # paddle_x,paddle_y;ball_x,ball_y
@@ -74,6 +74,10 @@ class GameClient
 	
 	def send_test
 		send_message "000,000,000,000,000,000,"
+	end
+	
+	def close
+		@socket.close
 	end
 
 end
