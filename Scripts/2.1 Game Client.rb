@@ -13,14 +13,18 @@ class GameClient
 
 	include Mobius::Multiplayer
 	Message_Length = 24
+
+	attr_reader :game_state
 	
 	# default port = 1990
 	# default hostname = localhost
 	def initialize(port = DEFAULT_PORT, hostname = DEFAULT_HOSTNAME)
+		Console.log 'Creating socket...'
 		@socket = TCPSocket.new(hostname, port)
 		@request = ""
 		@reply = ""
 		@input_state = ""
+		@game_state = {}
 	end
 	
 	def update
@@ -35,8 +39,10 @@ class GameClient
 		send_message( pack_message(@input_state) )
 		# every frame assume server is sending you data
 		get_reply
+		# turn reply in game state has
+		make_game_state
 	end
-	
+
 	def send_message(msg)
 		Console.log("sending message: #{msg}...\n")
 		@request = msg.ljust(Message_Length).slice(0,Message_Length - 1)
@@ -71,7 +77,17 @@ class GameClient
 	def unpack_message(str)
 		return str.split(",").collect {|x| x.to_i}
 	end
-	
+
+	def make_game_state
+		arr = unpack_message(@reply)
+		@game_state[:paddle_left_y]  = arr[0]
+		@game_state[:paddle_right_y] = arr[1]
+		@game_state[:ball_x]         = arr[2]
+		@game_state[:ball_y]         = arr[3]
+		@game_state[:score_left]     = arr[4]
+		@game_state[:score_right]    = arr[5]
+	end
+
 	def send_test
 		send_message "000,000,000,000,000,000,"
 	end

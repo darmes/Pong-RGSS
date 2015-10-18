@@ -89,18 +89,18 @@ class GameServer
 	end
 	
 	def game_state=(game_state_hash)
-		paddle1_y =  game_state_hash[:paddle1_y]
-		paddle2_y =  game_state_hash[:paddle2_y]
-		ball_x    =  game_state_hash[:ball_x]
-		ball_y    =  game_state_hash[:ball_y]
-		score1    =  game_state_hash[:@score_left]
-		score2    =  game_state_hash[:@score_right]
+		paddle_left_y  =  game_state_hash[:paddle_left_y]
+		paddle_right_y =  game_state_hash[:paddle_right_y]
+		ball_x         =  game_state_hash[:ball_x]
+		ball_y         =  game_state_hash[:ball_y]
+		score1         =  game_state_hash[:score_left]
+		score2         =  game_state_hash[:score_right]
 	end
 	
-	def paddle1_y=(y)
+	def paddle_left_y=(y)
 		@game_state[0] = y
 	end
-	def paddle2_y=(y)
+	def paddle_right_y=(y)
 		@game_state[1] = y
 	end
 	def ball_x=(x)
