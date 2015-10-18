@@ -33,12 +33,12 @@ class Spriteset_Pong_Base
   # * Make Sprites
   #--------------------------------------------------------------------------
   def make_sprites
+    # Make ball sprite
+    @ball = Sprite_Ball.new(@viewport1)
     # Make left paddle
     @paddle_left = make_left_paddle
     # Make right paddle
     @paddle_right = make_right_paddle
-    # Make ball sprite
-    @ball = Sprite_Ball.new(@viewport1)
     # Make score sprites
     @score_left_sprite  = Sprite_Score_Left.new(@viewport1)
     @score_right_sprite = Sprite_Score_Right.new(@viewport1)
