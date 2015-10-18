@@ -1,6 +1,9 @@
 # Specific Files
 Calls to remember.rb
 
+# Error Logs
+Error Logs/
+
 # RXData
 *.rxdata
 
