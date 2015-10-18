@@ -69,24 +69,24 @@ class Spriteset_Pong_Two_LAN
     judge
     # update player paddle
     @player_1.update
-    # update enemy paddle
+    # update player_2 paddle
     @player_2.update_2_player
     # if ball is touching either wall
     if @ball.y <= 0 or @ball.ey >= 480
       @ball.wall_bounce
     end
     # if ball is touching player paddle and moving towards it
-    if @ball.x <= @player.ex and
-       (@player.y...@player.ey).include?(@ball.y) and
+    if @ball.x <= @player_2.ex and
+       (@player_2.y...@player_2.ey).include?(@ball.y) and
 			 @ball.x_vector < 0
-				@ball.paddle_bounce
-     end
-     # if ball is touching enemy paddle and moving towards it
-     if @ball.ex >= @enemy.x and
-       (@enemy.y...@enemy.ey).include?(@ball.y) and
-			 @ball.x_vector > 0
-				@ball.paddle_bounce
-     end
+				 @ball.paddle_bounce
+		end
+		# if ball is touching player_2 paddle and moving towards it
+		if @ball.ex >= @player_1.x and
+		   (@player_1.y...@player_1.ey).include?(@ball.y) and
+		   @ball.x_vector > 0
+			   @ball.paddle_bounce
+		end
     # update ball position
     @ball.move 
     # increase wait count
