@@ -125,7 +125,7 @@ class Scene_Connect
 			sleep(1)
 			$game_server.accept
 			# @connection_thread = nil
-			$scene = Scene_Pong_Two.new(true, true)
+			$scene = Scene_Pong_Server.new
 		end
 		Thread.current.priority = 10
 		Console.log "Thread is running, returning to normal update cycle"
@@ -134,8 +134,9 @@ class Scene_Connect
 	# * Establish Connection with Server
 	#--------------------------------------------------------------------------
 	def establish_connection_with_server
-	
-	end
+	  $game_client = GameClient.new
+    $scene = Scene_Pong_Client.new
+  end
 	#--------------------------------------------------------------------------
 	# * Connecting? - return whether the process is trying to connect
 	#--------------------------------------------------------------------------
