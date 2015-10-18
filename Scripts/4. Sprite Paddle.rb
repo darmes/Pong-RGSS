@@ -219,7 +219,6 @@ class Sprite_Paddle_Enemy < Sprite_Paddle_Right
   def initialize(viewport, ball = nil)
     super(viewport)
     @ball = ball
-    self.x = viewport.width - self.width - 15
   end
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -250,6 +249,28 @@ class Sprite_Paddle_Enemy < Sprite_Paddle_Right
         self.y += 4 unless self.ey >= 480
       end
       return
+    end
+  end
+end
+
+#==============================================================================
+# ** Sprite_Paddle_Client
+#------------------------------------------------------------------------------
+#  This sprite is used to display the right client paddle
+#==============================================================================
+
+class Sprite_Paddle_Client < Sprite_Paddle_Right
+  #--------------------------------------------------------------------------
+  # * Frame Update
+  #--------------------------------------------------------------------------
+  def update
+    # if moving up
+    if $game_client.reply == 'up'
+      self.y -= 4 unless self.y <= 0
+    end
+    # if moving down
+    if $game_client.reply == 'down'
+      self.y += 4 unless self.ey >= 480
     end
   end
 end

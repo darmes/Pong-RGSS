@@ -6,6 +6,10 @@
 
 class Spriteset_Pong_Base
   #--------------------------------------------------------------------------
+  # * Public Variables
+  #--------------------------------------------------------------------------
+  attr_accessor :game_state
+  #--------------------------------------------------------------------------
   # * Object Initialization
   #--------------------------------------------------------------------------
   def initialize
@@ -18,6 +22,8 @@ class Spriteset_Pong_Base
     # Make score counters
     @score_left = 0
     @score_right = 0
+    # Make Game State Hash
+    @game_state = {}
     # Reset
     reset
     # Frame update
@@ -84,6 +90,8 @@ class Spriteset_Pong_Base
     # increase wait count
     @wait_count += 1
     @ball.speed_up if @wait_count % 1000 == 0
+    # update game state
+    update_game_state
   end
   #--------------------------------------------------------------------------
   # * judge
@@ -131,5 +139,27 @@ class Spriteset_Pong_Base
     @score_right_sprite.set_score(@score_right)
     $start = true
     sleep(1)
+  end
+  #--------------------------------------------------------------------------
+  # * Update Game State -- collects and stores important info for each object
+  #--------------------------------------------------------------------------
+  def update_game_state
+    @game_state[:paddle_left_y]  = @paddle_left.y
+    @game_state[:paddle_right_y] = @paddle_right.y
+    @game_state[:ball_x]         = @ball.x
+    @game_state[:ball_y]         = @ball.y
+    @game_state[:score_left]     = @score_left
+    @game_state[:score_right]    = @score_right
+  end
+  #--------------------------------------------------------------------------
+  # * Update From Game State -- Uses game state to set objects
+  #--------------------------------------------------------------------------
+  def update_from_game_state
+    @paddle_left.y  = @game_state[:paddle_left_y]
+    @paddle_right.y = @game_state[:paddle_right_y]
+    @ball.x         = @game_state[:ball_x]
+    @ball.y         = @game_state[:ball_y]
+    @score_left     = @game_state[:score_left]
+    @score_right    = @game_state[:score_right]
   end
 end

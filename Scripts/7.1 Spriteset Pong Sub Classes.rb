@@ -51,3 +51,49 @@ class Spriteset_Pong_Two < Spriteset_Pong_Base
     return Sprite_Paddle_Right.new(@viewport1)
   end
 end
+
+#==============================================================================
+# ** Spriteset_Pong Server
+#------------------------------------------------------------------------------
+#  This class brings together screen sprites
+#==============================================================================
+class Spriteset_Pong_Server < Spriteset_Pong_Base
+  #--------------------------------------------------------------------------
+  # * Makes the left paddle
+  #--------------------------------------------------------------------------
+  def make_left_paddle
+    return Sprite_Paddle_Left.new(@viewport1, true)
+  end
+  #--------------------------------------------------------------------------
+  # * Makes the right paddle
+  #--------------------------------------------------------------------------
+  def make_right_paddle
+    return Sprite_Paddle_Client.new(@viewport1)
+  end
+end
+
+#==============================================================================
+# ** Spriteset_Pong Client
+#------------------------------------------------------------------------------
+#  This class brings together screen sprites
+#==============================================================================
+class Spriteset_Pong_Client < Spriteset_Pong_Base
+  #--------------------------------------------------------------------------
+  # * Makes the left paddle
+  #--------------------------------------------------------------------------
+  def make_left_paddle
+    return Sprite_Paddle_Left.new(@viewport1)
+  end
+  #--------------------------------------------------------------------------
+  # * Makes the right paddle
+  #--------------------------------------------------------------------------
+  def make_right_paddle
+    return Sprite_Paddle_Right.new(@viewport1)
+  end
+  #--------------------------------------------------------------------------
+  # * Frame Update
+  #--------------------------------------------------------------------------
+  def update
+    update_from_game_state
+  end
+end
