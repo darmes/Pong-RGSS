@@ -75,16 +75,8 @@ class Spriteset_Pong_Base
     if @ball.y <= 0 or @ball.ey >= @viewport1.height
       @ball.wall_bounce
     end
-    # if ball is touching left paddle and moving towards it
-    if @ball.x <= @paddle_left.ex and
-        (@paddle_left.y...@paddle_left.ey).include?(@ball.y) and
-        @ball.x_vector < 0
-      @ball.paddle_bounce
-    end
-    # if ball is touching right paddle and moving towards it
-    if @ball.ex >= @paddle_right.x and
-        (@paddle_right.y...@paddle_right.ey).include?(@ball.y) and
-        @ball.x_vector > 0
+    # if ball is bouncing off either paddle
+    if @paddle_left.bouncing?(@ball) or @paddle_right.bouncing?(@ball)
       @ball.paddle_bounce
     end
     # update ball position
@@ -98,23 +90,35 @@ class Spriteset_Pong_Base
   #--------------------------------------------------------------------------
   def judge
     if @score_left == 9
-      print "You Win!"
-      $scene = Scene_Title_Pong.new
+      left_win
     end
     if @score_right == 9
-      print "You Lose!"
-      $scene = Scene_Title_Pong.new
+      right_win
     end
     if @ball.x <= @paddle_left.x and
-        not (@paddle_left.y...@paddle_left.ey).include?(@ball.y)
-      @score_right += 1
-      reset
+      not @paddle_left.ball_within_height?(@ball)
+        @score_right += 1
+        reset
     end
     if @ball.ex >= @paddle_right.ex and
-        not (@paddle_right.y...@paddle_right.ey).include?(@ball.y)
-      @score_left += 1
-      reset
+      not @paddle_right.ball_within_height?(@ball)
+        @score_left += 1
+        reset
     end
+  end
+  #--------------------------------------------------------------------------
+  # * Left Win - called when left player wins
+  #--------------------------------------------------------------------------
+  def left_win
+    print "Left Player Wins!"
+    $scene = Scene_Title_Pong.new
+  end
+  #--------------------------------------------------------------------------
+  # * Right Win - called when right player wins
+  #--------------------------------------------------------------------------
+  def right_win
+    print "Right Player Wins!"
+    $scene = Scene_Title_Pong.new
   end
   #--------------------------------------------------------------------------
   # * Reset

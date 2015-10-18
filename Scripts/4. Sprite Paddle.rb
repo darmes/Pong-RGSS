@@ -16,9 +16,6 @@ class Sprite_Paddle < Sprite_Base
     self.bitmap.fill_rect(rect, Color.new(255, 255, 255))
     reset
   end
-
-
-
   #--------------------------------------------------------------------------
   # * Dispose
   #--------------------------------------------------------------------------
@@ -35,64 +32,70 @@ class Sprite_Paddle < Sprite_Base
     self.y = (self.viewport.height / 2) - (self.height / 2)
   end
   #--------------------------------------------------------------------------
+  # * Ball Within Height? - determines whether the ball is within the
+  #   height of the paddle
+  #--------------------------------------------------------------------------
+  def ball_within_height?(ball)
+    (self.y...self.ey).include?(ball.y) or
+    (self.y...self.ey).include?(ball.ey)
+  end
+    #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
-=begin
-  def update
-    # if moving up
-    if Input.press?(Input::UP)
-      self.y -= 4 unless self.y <= 0
-    end
-    # if moving down
-    if Input.press?(Input::DOWN)
-      self.y += 4 unless self.ey >= 480
-    end
-  end
-=end
+  # def update
+  #   # if moving up
+  #   if Input.press?(Input::UP)
+  #     self.y -= 4 unless self.y <= 0
+  #   end
+  #   # if moving down
+  #   if Input.press?(Input::DOWN)
+  #     self.y += 4 unless self.ey >= 480
+  #   end
+  # end
   #--------------------------------------------------------------------------
   # * Frame Update 2
   #--------------------------------------------------------------------------
-  def update_2_player
-    # if moving up
-    if Input.press?(Input::SHIFT)
-      self.y -= 4 unless self.y <= 0
-    end
-    # if moving down
-    if Input.press?(Input::CTRL)
-      self.y += 4 unless self.ey >= 480
-    end
-  end
+  # def update_2_player
+  #   # if moving up
+  #   if Input.press?(Input::SHIFT)
+  #     self.y -= 4 unless self.y <= 0
+  #   end
+  #   # if moving down
+  #   if Input.press?(Input::CTRL)
+  #     self.y += 4 unless self.ey >= 480
+  #   end
+  # end
   #--------------------------------------------------------------------------
   # * Enemy Update
   #--------------------------------------------------------------------------
-  def enemy_update(ball)
-    # if ball is moving away
-    if ball.x_vector < 0
-      # if above center
-      if self.y < (480 / 2 - self.height / 2)
-        self.y += 2 # move down
-      # if below center
-      elsif self.y > (480 / 2 - self.height / 2)
-        self.y -= 2 # move up
-      end
-      return
-    else # if ball is moving toward
-      # if ball is above paddle and moving up
-      if ball.cy < self.cy and ball.y_vector < 0
-        self.y -= 4 unless self.y <= 0
-      # if ball is above paddle and moving down
-      elsif ball.cy < self.cy and ball.y_vector > 0
-        self.y -= 2 unless self.y <= 0
-      # if ball is below paddle and moving up
-      elsif ball.cy > self.cy and ball.y_vector < 0
-        self.y += 2 unless self.ey >= 480
-      # if ball is below paddle and moving down
-      elsif ball.cy > self.cy and ball.y_vector > 0
-        self.y += 4 unless self.ey >= 480
-      end
-      return
-    end
-  end
+  # def enemy_update(ball)
+  #   # if ball is moving away
+  #   if ball.x_vector < 0
+  #     # if above center
+  #     if self.y < (480 / 2 - self.height / 2)
+  #       self.y += 2 # move down
+  #     # if below center
+  #     elsif self.y > (480 / 2 - self.height / 2)
+  #       self.y -= 2 # move up
+  #     end
+  #     return
+  #   else # if ball is moving toward
+  #     # if ball is above paddle and moving up
+  #     if ball.cy < self.cy and ball.y_vector < 0
+  #       self.y -= 4 unless self.y <= 0
+  #     # if ball is above paddle and moving down
+  #     elsif ball.cy < self.cy and ball.y_vector > 0
+  #       self.y -= 2 unless self.y <= 0
+  #     # if ball is below paddle and moving up
+  #     elsif ball.cy > self.cy and ball.y_vector < 0
+  #       self.y += 2 unless self.ey >= 480
+  #     # if ball is below paddle and moving down
+  #     elsif ball.cy > self.cy and ball.y_vector > 0
+  #       self.y += 4 unless self.ey >= 480
+  #     end
+  #     return
+  #   end
+  # end
 end
 
 #==============================================================================
@@ -147,6 +150,17 @@ class Sprite_Paddle_Left < Sprite_Paddle
       self.y += 4 unless self.ey >= 480
     end
   end
+  #--------------------------------------------------------------------------
+  # * Bouncing?
+  #--------------------------------------------------------------------------
+  def bouncing?(ball)
+    # is left edge of ball touching/past right edge of paddle?
+    ball.x <= self.ex and
+    # is ball within the height of the paddle?
+    ball_within_height?(ball) and
+    # is ball moving toward the paddle?
+    ball.x_vector < 0
+  end
 end
 
 #==============================================================================
@@ -176,6 +190,17 @@ class Sprite_Paddle_Right < Sprite_Paddle
     if Input.press?(Input::DOWN)
       self.y += 4 unless self.ey >= 480
     end
+  end
+  #--------------------------------------------------------------------------
+  # * Bouncing?
+  #--------------------------------------------------------------------------
+  def bouncing?(ball)
+    # is right edge of ball touching/past left edge of paddle?
+    ball.ex >= self.x and
+    # is ball within the height of the paddle?
+    ball_within_height?(ball) and
+    # is ball moving toward the paddle?
+    ball.x_vector > 0
   end
 end
 
