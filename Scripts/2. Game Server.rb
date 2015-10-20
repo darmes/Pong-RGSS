@@ -13,7 +13,6 @@
 class GameServer
 
 	include Mobius::Multiplayer
-	Message_Length = 24
 	
 	attr_reader :reply
 	
@@ -49,17 +48,18 @@ class GameServer
 	end
 	
 	def send_message(msg)
-		Console.log("sending message: #{msg}...\n")
+		Console.log("sending message: #{msg}")
 		@request = msg.ljust(Message_Length).slice(0,Message_Length - 1)
-		@socket.send(@request, 0)
-		Console.log("message sent\n")
+		@socket.send(@request)#, 0)
+		Console.log("message sent")
 	end
 	
 	def get_reply
 		#@reply = nil
-		Console.log("waiting for reply...\n")
+		Console.log("waiting for reply...")
 		thr = Thread.new do
 			@reply = @socket.recv(Message_Length).rstrip
+			Console.log("reply received: #{@reply}")
 		end
 		# wait up to 1 second for response
 		# if thr.join(1)
@@ -89,12 +89,12 @@ class GameServer
 	end
 	
 	def game_state=(game_state_hash)
-		paddle_left_y  =  game_state_hash[:paddle_left_y]
-		paddle_right_y =  game_state_hash[:paddle_right_y]
-		ball_x         =  game_state_hash[:ball_x]
-		ball_y         =  game_state_hash[:ball_y]
-		score1         =  game_state_hash[:score_left]
-		score2         =  game_state_hash[:score_right]
+		self.paddle_left_y  =  game_state_hash[:paddle_left_y]
+		self.paddle_right_y =  game_state_hash[:paddle_right_y]
+		self.ball_x         =  game_state_hash[:ball_x]
+		self.ball_y         =  game_state_hash[:ball_y]
+		self.score1         =  game_state_hash[:score_left]
+		self.score2         =  game_state_hash[:score_right]
 	end
 	
 	def paddle_left_y=(y)

@@ -12,31 +12,40 @@
 class GameClient
 
 	include Mobius::Multiplayer
-	Message_Length = 24
 
 	attr_reader :game_state
+	#attr_reader :reply
 	
 	# default port = 1990
 	# default hostname = localhost
 	def initialize(port = DEFAULT_PORT, hostname = DEFAULT_HOSTNAME)
 		Console.log 'Creating socket...'
-		@socket = TCPSocket.new(hostname, port)
+		create_socket(hostname, port)
 		@request = ""
 		@reply = ""
 		@input_state = ""
 		@game_state = {}
 	end
-	
+
+	def create_socket(hostname, port)
+
+		connection_attempt_thread = Thread.new do
+			@socket = TCPSocket.new(hostname, port)
+			Console.log 'socket connected'
+		end
+
+	end
+
 	def update
 		# every frame check input and send to server
 		if Input.press?(Input::UP)
 			@input_state = "up"
-		eslif Input.press?(Input::DOWN)
+		elsif Input.press?(Input::DOWN)
 			@input_state = "down"
 		else
 			@input_state = ""
 		end
-		send_message( pack_message(@input_state) )
+		send_message( @input_state ) # pack_message(@input_state) )
 		# every frame assume server is sending you data
 		get_reply
 		# turn reply in game state has
@@ -46,7 +55,7 @@ class GameClient
 	def send_message(msg)
 		Console.log("sending message: #{msg}...\n")
 		@request = msg.ljust(Message_Length).slice(0,Message_Length - 1)
-		@socket.send(@request, 0)
+		@socket.send(@request)#, 0)
 		Console.log("message sent\n")
 	end
 	
@@ -54,6 +63,7 @@ class GameClient
 		Console.log("waiting for reply...\n")
 		thr = Thread.new do
 			@reply = @socket.recv(Message_Length).rstrip
+			Console.log("reply received: #{@reply}\n")
 		end
 		# wait up to 2 seconds for response
 		# if thr.join(2)

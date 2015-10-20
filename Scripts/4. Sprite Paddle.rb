@@ -265,11 +265,11 @@ class Sprite_Paddle_Client < Sprite_Paddle_Right
   #--------------------------------------------------------------------------
   def update
     # if moving up
-    if $game_client.reply == 'up'
+    if $game_server.reply == 'up'
       self.y -= 4 unless self.y <= 0
     end
     # if moving down
-    if $game_client.reply == 'down'
+    if $game_server.reply == 'down'
       self.y += 4 unless self.ey >= 480
     end
   end

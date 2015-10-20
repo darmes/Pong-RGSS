@@ -66,7 +66,7 @@ class Sprite_Ball < Sprite_Base
   def reset
     self.x = (viewport.width  / 2) - (self.width  / 2)
     self.y = (viewport.height / 2) - (self.height / 2)
-    @ball.x_vector = rand(2) == 0 ? rand(2) + 2 : - rand(2) - 2
-    @ball.y_vector = rand(2) == 0 ? rand(2) + 2 : - rand(2) - 2
+    self.x_vector = rand(2) == 0 ? rand(2) + 2 : - rand(2) - 2
+    self.y_vector = rand(2) == 0 ? rand(2) + 2 : - rand(2) - 2
   end
 end

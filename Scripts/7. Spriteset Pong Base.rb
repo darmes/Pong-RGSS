@@ -24,6 +24,7 @@ class Spriteset_Pong_Base
     @score_right = 0
     # Make Game State Hash
     @game_state = {}
+    @game_state.default = 0
     # Reset
     reset
     # Frame update

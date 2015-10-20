@@ -97,10 +97,8 @@ class Scene_Connect
   def command_client
     # Play decision SE
     $game_system.se_play($data_system.decision_se)
-    # Create Client
-		$game_client = GameClient.new
-    # Switch to game screen
-    $scene = Scene_Pong_Two.new(true, false)
+    # Connect to server
+    establish_connection_with_server
   end
   #--------------------------------------------------------------------------
   # * Command: Back
@@ -127,7 +125,7 @@ class Scene_Connect
 			# @connection_thread = nil
 			$scene = Scene_Pong_Server.new
 		end
-		Thread.current.priority = 10
+		#Thread.current.priority = 10
 		Console.log "Thread is running, returning to normal update cycle"
 	end
 	#--------------------------------------------------------------------------

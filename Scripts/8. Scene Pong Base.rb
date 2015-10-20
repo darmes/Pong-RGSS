@@ -40,7 +40,7 @@ class Scene_Pong_Base
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
-        if Input.press?(Input::B)
+    if Input.press?(Input::B)
       $scene = Scene_Title_Pong.new
     end
     @spriteset.update

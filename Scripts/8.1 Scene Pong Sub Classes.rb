@@ -43,7 +43,9 @@ class Scene_Pong_Server < Scene_Pong_Base
   #--------------------------------------------------------------------------
   def update
     super
+    Console.log 'updating server game state...'
     $game_server.game_state = @spriteset.game_state
+    Console.log 'updating server...'
     $game_server.update
   end
 end
