@@ -1,17 +1,17 @@
 #==============================================================================
-# ** Scene_Pong One Player
+# ** Scene_Pong_Base
 #------------------------------------------------------------------------------
 #  This class performs scene processing
 #==============================================================================
 
-class Scene_Pong_One
+class Scene_Pong_Base
   #--------------------------------------------------------------------------
   # * Main Processing
   #--------------------------------------------------------------------------
   def main
     $start = false
     # Set up
-    @spriteset = Spriteset_Pong_One.new
+    @spriteset = make_spriteset
     # Transition run
     Graphics.transition
     # Main loop
@@ -33,10 +33,8 @@ class Scene_Pong_One
     end
     # Prepare for transition
     Graphics.freeze
-    
     # Dispose of graphics
     @spriteset.dispose
-    
   end
   #--------------------------------------------------------------------------
   # * Frame Update
@@ -47,6 +45,4 @@ class Scene_Pong_One
     end
     @spriteset.update
   end
-  
-
 end

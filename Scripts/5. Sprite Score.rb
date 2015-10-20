@@ -1,21 +1,17 @@
 #==============================================================================
 # ** Sprite_Score
 #------------------------------------------------------------------------------
-#  This sprite is used to display the paddles
+#  This sprite is used to display the scores
 #==============================================================================
 
 class Sprite_Score < Sprite_Base
   #--------------------------------------------------------------------------
-  # * Public Instance Variables
-  #--------------------------------------------------------------------------
-
-  #--------------------------------------------------------------------------
   # * Object Initialization
   #     viewport : viewport
-  #     battler  : battler (Game_Battler)
   #--------------------------------------------------------------------------
   def initialize(viewport)
     super(viewport)
+    self.y = 15
     self.z = 1
     set_score(0)
   end
@@ -44,5 +40,39 @@ class Sprite_Score < Sprite_Base
     when 8 ; self.bitmap = RPG::Cache.picture("Pong Eight")
     when 9 ; self.bitmap = RPG::Cache.picture("Pong Nine")
     end
+  end
+end
+
+#==============================================================================
+# ** Sprite_Score_Left
+#------------------------------------------------------------------------------
+#  This sprite is used to display the left score
+#==============================================================================
+
+class Sprite_Score_Left < Sprite_Score
+  #--------------------------------------------------------------------------
+  # * Object Initialization
+  #     viewport : viewport
+  #--------------------------------------------------------------------------
+  def initialize(viewport)
+    super(viewport)
+    self.x = (viewport.width / 3) - (self.width / 2)
+  end
+end
+
+#==============================================================================
+# ** Sprite_Score_Right
+#------------------------------------------------------------------------------
+#  This sprite is used to display the left score
+#==============================================================================
+
+class Sprite_Score_Right < Sprite_Score
+  #--------------------------------------------------------------------------
+  # * Object Initialization
+  #     viewport : viewport
+  #--------------------------------------------------------------------------
+  def initialize(viewport)
+    super(viewport)
+    self.x = (viewport.width * 2 / 3) - (self.width / 2)
   end
 end
