@@ -35,6 +35,8 @@ class Exception
     file.write(self.message + "\n\n")
     file.write("Error Backtrace:\n")
     file.write(self.mobius_print_backtrace)
+    file.write("\n\nOriginal Backtrace:\n")
+    file.write(self.backtrace.join("\n"))
     file.close
   end
   

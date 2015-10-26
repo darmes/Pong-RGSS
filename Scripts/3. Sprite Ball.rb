@@ -21,8 +21,7 @@ class Sprite_Ball < Sprite_Base
     rect = self.bitmap.rect
     self.bitmap.fill_rect(rect, Color.new(255, 255, 255))
     self.z = 1000
-    @x_vector = 0
-    @y_vector = 0
+    reset
   end
   #--------------------------------------------------------------------------
   # * Dispose
@@ -60,5 +59,14 @@ class Sprite_Ball < Sprite_Base
   def speed_up
     @x_vector > 0 ? @x_vector += 1 : @x_vector -= 1
     @y_vector > 0 ? @y_vector += 1 : @y_vector -= 1
+  end
+  #--------------------------------------------------------------------------
+  # * reset
+  #--------------------------------------------------------------------------
+  def reset
+    self.x = (viewport.width  / 2) - (self.width  / 2)
+    self.y = (viewport.height / 2) - (self.height / 2)
+    self.x_vector = rand(2) == 0 ? rand(2) + 2 : - rand(2) - 2
+    self.y_vector = rand(2) == 0 ? rand(2) + 2 : - rand(2) - 2
   end
 end

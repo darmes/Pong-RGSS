@@ -1,4 +1,4 @@
-require "socket"
+# require "socket"
 # GameClient needs to get player 1 paddle position and ball position
 # GameClient needs to send player 2 paddle position
 # Get message format: 000,000;000,000; # paddle_x,paddle_y;ball_x,ball_y
@@ -9,54 +9,64 @@ require "socket"
 # 000,000,000,000,000,000,
 
 # Then we'll only have to upload player2's input
-# @reply = "up" or "down"
-class GameServer
+class GameClient < GameSocket
 
 	include Mobius::Multiplayer
-	Message_Length = 24
-	
-	attr_reader :reply
+
+	attr_reader :game_state
+	#attr_reader :reply
 	
 	# default port = 1990
 	# default hostname = localhost
-	def initialize(port = DEFAULT_PORT)
-		@server = TCPServer.new(port)
-		@socket = nil
+	def initialize(port = DEFAULT_PORT, hostname = DEFAULT_HOSTNAME)
+		Console.log 'Creating socket...'
+		create_socket(hostname, port)
 		@request = ""
-		# Initialize reply to nil
-		@reply = nil
-		# Create empty game_state array initialized to 0's
-		@game_state = Array.new(6, 0) 
+		@reply = ""
+		@input_state = ""
+		@game_state = {}
 	end
-	
-	def accept_connection
-		Thread.new do
-			@socket = @server.accept
-		end		
+
+	def create_socket(hostname, port)
+
+		connection_attempt_thread = Thread.new do
+			@socket = TCPSocket.new(hostname, port)
+			Console.log 'socket connected'
+		end
+
 	end
-	
+
 	def update
-		# every frame assume @game_state is good and send to client
-		send_message( pack_message(@game_state) )
-		# every frame assume client is sending you data
+		# every frame check input and send to server
+		if Input.press?(Input::UP)
+			@input_state = "up"
+		elsif Input.press?(Input::DOWN)
+			@input_state = "down"
+		else
+			@input_state = ""
+		end
+		send_message( @input_state ) # pack_message(@input_state) )
+		# every frame assume server is sending you data
 		get_reply
+		# turn reply in game state has
+		make_game_state
 	end
-	
+
 	def send_message(msg)
 		Console.log("sending message: #{msg}...\n")
 		@request = msg.ljust(Message_Length).slice(0,Message_Length - 1)
-		@socket.send(@request, 0)
+		@socket.send(@request)#, 0)
 		Console.log("message sent\n")
 	end
 	
 	def get_reply
-		#@reply = nil
 		Console.log("waiting for reply...\n")
 		thr = Thread.new do
 			@reply = @socket.recv(Message_Length).rstrip
+			Console.log("reply received: #{@reply}\n")
 		end
-		# wait up to 1 second for response
-		# if thr.join(1)
+		# wait up to 2 seconds for response
+		# if thr.join(2)
 			# Console.log("reply received: #{@reply}\n")
 			# return @reply
 		# else
@@ -77,37 +87,23 @@ class GameServer
 	def unpack_message(str)
 		return str.split(",").collect {|x| x.to_i}
 	end
-	
+
+	def make_game_state
+		arr = unpack_message(@reply)
+		@game_state[:paddle_left_y]  = arr[0]
+		@game_state[:paddle_right_y] = arr[1]
+		@game_state[:ball_x]         = arr[2]
+		@game_state[:ball_y]         = arr[3]
+		@game_state[:score_left]     = arr[4]
+		@game_state[:score_right]    = arr[5]
+	end
+
 	def send_test
 		send_message "000,000,000,000,000,000,"
 	end
 	
-	def game_state=(game_state_hash)
-		paddle1_y =  game_state_hash[:paddle1_y]
-		paddle2_y =  game_state_hash[:paddle2_y]
-		ball_x    =  game_state_hash[:ball_x]
-		ball_y    =  game_state_hash[:ball_y]
-		score1    =  game_state_hash[:score1]
-		score2    =  game_state_hash[:score2]
+	def close
+		@socket.close
 	end
-	
-	def paddle1_y=(y)
-		@game_state[0] = y
-	end
-	def paddle2_y=(y)
-		@game_state[1] = y
-	end
-	def ball_x=(x)
-		@game_state[2] = x
-	end
-	def ball_y=(y)
-		@game_state[3] = y
-	end
-	def score1=(score)
-		@game_state[4] = score
-	end
-	def score2=(score)
-		@game_state[5] = score
-	end	
 
 end
