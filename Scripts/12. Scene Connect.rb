@@ -20,6 +20,7 @@ class Scene_Connect
     @command_window.back_opacity = 160
     @command_window.x = 320 - @command_window.width / 2
     @command_window.y = 288
+
 		# Make help window
 		@help_window = Window_Help.new
 		@help_window.set_text("Are you host or client?", 1)
@@ -87,9 +88,6 @@ class Scene_Connect
     $game_system.se_play($data_system.decision_se)
 		# Connect to client
 		establish_connection_with_client
-    
-    # Switch to game screen
-    # $scene = Scene_Pong_Two.new(true, true)
 	end
   #--------------------------------------------------------------------------
   # * Command: Client

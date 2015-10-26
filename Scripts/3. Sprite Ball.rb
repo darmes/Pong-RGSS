@@ -13,7 +13,6 @@ class Sprite_Ball < Sprite_Base
   #--------------------------------------------------------------------------
   # * Object Initialization
   #     viewport : viewport
-  #     battler  : battler (Game_Battler)
   #--------------------------------------------------------------------------
   def initialize(viewport)
     super(viewport)
