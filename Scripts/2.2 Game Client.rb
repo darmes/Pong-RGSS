@@ -9,7 +9,7 @@
 # 000,000,000,000,000,000,
 
 # Then we'll only have to upload player2's input
-class GameClient
+class GameClient < GameSocket
 
 	include Mobius::Multiplayer
 

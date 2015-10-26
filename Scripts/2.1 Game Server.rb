@@ -1,4 +1,4 @@
-# require "socket"
+require_relative 'game_socket.rb' # require "socket"
 # GameClient needs to get player 1 paddle position and ball position
 # GameClient needs to send player 2 paddle position
 # Get message format: 000,000;000,000; # paddle_x,paddle_y;ball_x,ball_y
@@ -10,7 +10,7 @@
 
 # Then we'll only have to upload player2's input
 # @reply = "up" or "down"
-class GameServer
+class GameServer < GameSocket
 
 	include Mobius::Multiplayer
 	
@@ -47,34 +47,7 @@ class GameServer
 		get_reply
 	end
 	
-	def send_message(msg)
-		Console.log("sending message: #{msg}")
-		@request = msg.ljust(Message_Length).slice(0,Message_Length - 1)
-		@socket.send(@request)#, 0)
-		Console.log("message sent")
-	end
-	
-	def get_reply
-		#@reply = nil
-		Console.log("waiting for reply...")
-		thr = Thread.new do
-			@reply = @socket.recv(Message_Length).rstrip
-			Console.log("reply received: #{@reply}")
-		end
-		# wait up to 1 second for response
-		# if thr.join(1)
-			# Console.log("reply received: #{@reply}\n")
-			# return @reply
-		# else
-			# thr.kill
-			# Console.log("no reply received")
-			# return nil
-		# end
-	end
-	
-	# arr = [paddle_x,paddle_y,ball_x,ball_y]
-	# convert to "000,000,000,000,"
-	def pack_message(arr)
+	# arr = [paddle_x,paddle_y,ball_x,ball_y]# convert to "000,000,000,000,"def pack_message(arr)
 		return arr.collect {|x| sprintf("%03d", x)}.join(",") + ","
 	end
 	
