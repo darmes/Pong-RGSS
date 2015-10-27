@@ -4,6 +4,8 @@
 #  This sprite is used to display the paddles
 #==============================================================================
 
+rgss_require_relative('Scripts/Sprite Scripts/Sprite Base')
+
 class Sprite_Paddle < Sprite_Base
   #--------------------------------------------------------------------------
   # * Object Initialization

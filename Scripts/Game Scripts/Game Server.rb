@@ -8,6 +8,8 @@
 #  that back to the Spriteset.
 #==============================================================================
 
+rgss_require_relative('Scripts/Game Scripts/Game Socket')
+
 class GameServer < GameSocket
 
 	#--------------------------------------------------------------------------

@@ -4,6 +4,8 @@
 #  This class performs scene processing
 #==============================================================================
 
+rgss_require_relative('Scripts/Scene Scripts/Scene Base')
+
 class Scene_Pong_Base < Scene_Base
   #--------------------------------------------------------------------------
   # * Main Processing

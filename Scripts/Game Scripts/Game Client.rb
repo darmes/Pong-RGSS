@@ -8,6 +8,8 @@
 #  the server.
 #==============================================================================
 
+rgss_require_relative('Scripts/Game Scripts/Game Socket')
+
 class GameClient < GameSocket
 
 	#--------------------------------------------------------------------------

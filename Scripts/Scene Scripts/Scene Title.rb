@@ -4,11 +4,14 @@
 #  This class performs title screen processing.
 #==============================================================================
 
-class Scene_Title_Pong
+rgss_require_relative('Scripts/Scene Scripts/Scene Base')
+
+class Scene_Title_Pong < Scene_Base
   #--------------------------------------------------------------------------
   # * Main Processing
   #--------------------------------------------------------------------------
   def main
+    # Load data system
     $data_system        = load_data("Data/System.rxdata")
     # Make system object
     $game_system = Game_System.new

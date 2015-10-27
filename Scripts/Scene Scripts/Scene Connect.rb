@@ -4,6 +4,8 @@
 #  This class performs connection processing.
 #==============================================================================
 
+rgss_require_relative('Scripts/Scene Scripts/Scene Base')
+
 class Scene_Connect < Scene_Base
   #--------------------------------------------------------------------------
   # * Main Processing
