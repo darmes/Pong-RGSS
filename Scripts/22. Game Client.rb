@@ -20,7 +20,7 @@ class GameClient < GameSocket
 	#     port     : port number as integer
 	#     defaults set by Mobius::Multiplayer
 	#--------------------------------------------------------------------------
-	def initialize(port = DEFAULT_PORT, hostname = DEFAULT_HOSTNAME)
+	def initialize(hostname = DEFAULT_HOSTNAME, port = DEFAULT_PORT)
 		Console.log 'Creating socket...'
 		create_socket(hostname, port)
 		@request = ''

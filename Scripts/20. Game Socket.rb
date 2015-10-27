@@ -46,10 +46,10 @@ class GameSocket
 	def unpack_message(str)
 		return str.split(",").collect { |x| x.to_i }
 	end
-	--------------------------------------------------------------------------
+	#--------------------------------------------------------------------------
 	# * Send Test - sends a test message to the connected socket
 	#--------------------------------------------------------------------------
 	def send_test
-		send_message "000,000,000,000,000,000,"
+		send_message '000,000,000,000,000,000,'
 	end
 end

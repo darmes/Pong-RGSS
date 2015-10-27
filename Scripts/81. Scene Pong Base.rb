@@ -45,4 +45,5 @@ class Scene_Pong_Base
     end
     @spriteset.update
   end
+
 end
